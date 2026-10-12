@@ -1,0 +1,33 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Node.js
+node_modules/
+dist/
+build/
+
+# Local databases and uploaded evidence
+backend/data/
+backend/uploads/
+uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

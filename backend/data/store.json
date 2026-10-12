@@ -1,0 +1,378 @@
+{
+  "investigations": {
+    "inv-demo-hospital-reimbursement": {
+      "id": "inv-demo-hospital-reimbursement",
+      "name": "Hospital Reimbursement Review",
+      "description": "Evaluation of reimbursement claim for ₹25,000 inpatient hospital admission and settlement receipts.",
+      "case_reference": "MED-2026-991",
+      "category": "Medical Documents",
+      "primary_claim": "A hospital bill of ₹25,000 was paid.",
+      "creator": "Senior Investigator (Demo)",
+      "created_at": "2026-10-12T19:28:46.731222",
+      "updated_at": "2026-10-12T19:28:46.731222",
+      "current_version": 1,
+      "status": "Review Required",
+      "reviewer_notes": "Initial documentation from hospital matches stated sum of ₹25,000, but lacks independent banking debit substantiation.",
+      "document_count": 4,
+      "findings_count": 1,
+      "is_demo": true
+    }
+  },
+  "documents": {
+    "doc-hospital_inpatient_bill_": {
+      "id": "doc-hospital_inpatient_bill_",
+      "investigation_id": "inv-demo-hospital-reimbursement",
+      "file_name": "Hospital_Inpatient_Bill_INV-8821.pdf",
+      "file_type": "pdf",
+      "file_size": 2579,
+      "file_hash": "8ce9fcf85f664505facdf7e3ffa6d74128da97427af557891ca7647e9c06c217",
+      "file_path": "E:\\New USER\\Desktop\\projects\\TrustTraceAI\\backend\\uploads\\demo_files\\Hospital_Inpatient_Bill_INV-8821.pdf",
+      "category": "Medical Document",
+      "classification": "Likely Text-Based PDF",
+      "metadata": {
+        "creation_date": "D:20261013005846+05'00'",
+        "modification_date": "D:20261013005846+05'00'",
+        "author": "(anonymous)",
+        "creator": "(unspecified)",
+        "producer": "ReportLab PDF Library - (opensource)",
+        "page_count": 1,
+        "pdf_version": "1.7",
+        "file_size_bytes": 2579,
+        "file_hash": "8ce9fcf85f664505facdf7e3ffa6d74128da97427af557891ca7647e9c06c217",
+        "completeness_score": 1.0,
+        "has_digital_signatures": false,
+        "font_count": 3,
+        "embedded_images_count": 0,
+        "is_encrypted": false
+      },
+      "extracted_text": "METROPOLITAN GENERAL HOSPITAL & HEALTHCARE\nOfficial Inpatient Summary Bill #INV-8821 (FICTIONAL DEMONSTRATION RECORD)\nPatient Name\nAnanya Sharma (Age 34)\nAdmission Date\n14-Aug-2026\nDischarge Date\n18-Aug-2026\nTreating Consultant\nDr. Rajesh K. Varma, MD\nDiagnostic Procedures\nI8,500.00\nRoom Charges (4 Days)\nI11,000.00\nMedications & Pharmacy\nI5,500.00\nTotal Amount Payable\nI25,000.00 (Twenty-Five Thousand INR)\nStatus\nDischarged — Payment Pending Verification\nInternal Forensic Annotation: Official hospital bill generated from billing software. Selectable vector text with font\ndefinitions.",
+      "extracted_fields": {
+        "amounts": [],
+        "dates": [],
+        "document_numbers": [
+          "INV-8821",
+          "generated"
+        ],
+        "reference_ids": [
+          "INV-8821"
+        ],
+        "organizations": [
+          "METROPOLITAN GENERAL HOSPITAL & HEALTHCARE",
+          "Medications & Pharmacy"
+        ],
+        "names": [],
+        "payment_references": [],
+        "claims": [
+          "Total Amount Payable",
+          "Discharged — Payment Pending Verification"
+        ]
+      },
+      "source_details": {
+        "issuing_organization": "Metropolitan General Hospital",
+        "source_name": "Metropolitan General Hospital Official Channel",
+        "date_received": "2026-08-20",
+        "original_source_url": "https://metropolitan.healthcare/portal",
+        "reviewer_notes": "Demonstration evidence item for reimbursement assessment."
+      },
+      "processing_status": "analyzed",
+      "upload_timestamp": "2026-10-12T19:28:46.570964",
+      "reviewer_notes": ""
+    },
+    "doc-hospital_cash_receipt_re": {
+      "id": "doc-hospital_cash_receipt_re",
+      "investigation_id": "inv-demo-hospital-reimbursement",
+      "file_name": "Hospital_Cash_Receipt_REC-4019.pdf",
+      "file_type": "pdf",
+      "file_size": 2403,
+      "file_hash": "4e6cbb02370b3c0239dce9bcfa695e35b1603becbf2d569fd5dd9f4bc4a993d1",
+      "file_path": "E:\\New USER\\Desktop\\projects\\TrustTraceAI\\backend\\uploads\\demo_files\\Hospital_Cash_Receipt_REC-4019.pdf",
+      "category": "Invoice or Receipt",
+      "classification": "Likely Text-Based PDF",
+      "metadata": {
+        "creation_date": "D:20261013005846+05'00'",
+        "modification_date": "D:20261013005846+05'00'",
+        "author": "(anonymous)",
+        "creator": "(unspecified)",
+        "producer": "ReportLab PDF Library - (opensource)",
+        "page_count": 1,
+        "pdf_version": "1.7",
+        "file_size_bytes": 2403,
+        "file_hash": "4e6cbb02370b3c0239dce9bcfa695e35b1603becbf2d569fd5dd9f4bc4a993d1",
+        "completeness_score": 1.0,
+        "has_digital_signatures": false,
+        "font_count": 3,
+        "embedded_images_count": 0,
+        "is_encrypted": false
+      },
+      "extracted_text": "METROPOLITAN GENERAL HOSPITAL — ACCOUNTS\nReceipt of Acknowledgment #REC-4019 (FICTIONAL DEMONSTRATION RECORD)\nReceived With Thanks From\nAnanya Sharma\nPayment Towards\nBill #INV-8821 Discharge Settlement\nAmount Received\nI25,000.00 (INR)\nPayment Mode Stated\nDirect Bank IMPS Transfer\nDate Received\n19-Aug-2026\nCashier Reference\nACCTS-SHIFT-B #902\nInternal Forensic Annotation: Receipt printed and issued on hospital letterhead. Matches total bill amount.",
+      "extracted_fields": {
+        "amounts": [],
+        "dates": [],
+        "document_numbers": [
+          "INV-8821",
+          "erence",
+          "printed",
+          "amount"
+        ],
+        "reference_ids": [
+          "REC-4019",
+          "INV-8821"
+        ],
+        "organizations": [
+          "METROPOLITAN GENERAL HOSPITAL — ACCOUNTS",
+          "Direct Bank IMPS Transfer"
+        ],
+        "names": [],
+        "payment_references": [
+          "IMPS Transfer"
+        ],
+        "claims": [
+          "Received With Thanks From"
+        ]
+      },
+      "source_details": {
+        "issuing_organization": "Metropolitan General Hospital",
+        "source_name": "Metropolitan General Hospital Official Channel",
+        "date_received": "2026-08-20",
+        "original_source_url": "https://metropolitan.healthcare/portal",
+        "reviewer_notes": "Demonstration evidence item for reimbursement assessment."
+      },
+      "processing_status": "analyzed",
+      "upload_timestamp": "2026-10-12T19:28:46.600021",
+      "reviewer_notes": ""
+    },
+    "doc-insurance_claim_email_co": {
+      "id": "doc-insurance_claim_email_co",
+      "investigation_id": "inv-demo-hospital-reimbursement",
+      "file_name": "Insurance_Claim_Email_Confirmation.txt",
+      "file_type": "txt",
+      "file_size": 549,
+      "file_hash": "a98de8c703cee9edd501350e18235bdb3eec1cbf416e5fea15cf404b4f09db68",
+      "file_path": "E:\\New USER\\Desktop\\projects\\TrustTraceAI\\backend\\uploads\\demo_files\\Insurance_Claim_Email_Confirmation.txt",
+      "category": "Email or Communication",
+      "classification": "Text Document",
+      "metadata": {
+        "creation_date": "2026-08-20T11:42:00",
+        "modification_date": "2026-08-20T11:42:00",
+        "author": "Billing Dept",
+        "creator": "Mail Server",
+        "producer": "SMTP Client",
+        "page_count": 1,
+        "pdf_version": null,
+        "file_size_bytes": 549,
+        "file_hash": "a98de8c703cee9edd501350e18235bdb3eec1cbf416e5fea15cf404b4f09db68",
+        "completeness_score": 0.8,
+        "has_digital_signatures": false,
+        "font_count": 0,
+        "embedded_images_count": 0,
+        "is_encrypted": false
+      },
+      "extracted_text": "Subject: RE: Hospital Reimbursement Claim Submission — Case Ref #MED-2026-991\nDate: 20-Aug-2026 11:42 AM\nFrom: billing.dept@metropolitangeneral.org\nTo: claims.desk@reimbursement-portal.com\n\nDear Claims Officer,\n\nThis is to confirm that patient Ananya Sharma was discharged on 18-Aug-2026.\nTotal hospital bill of ₹25,000 was settled as per Receipt #REC-4019.\nAttached please find the billing itemization for your reimbursement verification.\n\nSincerely,\nBilling & Patient Accounts Department\nMetropolitan General Hospital & Healthcare",
+      "extracted_fields": {
+        "amounts": [
+          "₹25,000"
+        ],
+        "dates": [],
+        "document_numbers": [
+          "Submission",
+          "MED-2026-991",
+          "REC-4019"
+        ],
+        "reference_ids": [
+          "REC-4019"
+        ],
+        "organizations": [
+          "Sincerely,",
+          "Metropolitan General Hospital & Healthcare"
+        ],
+        "names": [],
+        "payment_references": [],
+        "claims": [
+          "Subject: RE: Hospital Reimbursement Claim Submission — Case Ref #MED-2026-991",
+          "This is to confirm that patient Ananya Sharma was discharged on 18-Aug-2026."
+        ]
+      },
+      "source_details": {
+        "issuing_organization": "Metropolitan General Hospital",
+        "source_name": "Metropolitan General Hospital Official Channel",
+        "date_received": "2026-08-20",
+        "original_source_url": "https://metropolitan.healthcare/portal",
+        "reviewer_notes": "Demonstration evidence item for reimbursement assessment."
+      },
+      "processing_status": "analyzed",
+      "upload_timestamp": "2026-10-12T19:28:46.640691",
+      "reviewer_notes": ""
+    },
+    "doc-axis_bank_customer_state": {
+      "id": "doc-axis_bank_customer_state",
+      "investigation_id": "inv-demo-hospital-reimbursement",
+      "file_name": "Axis_Bank_Customer_Statement_Aug2026.pdf",
+      "file_type": "pdf",
+      "file_size": 2492,
+      "file_hash": "588d1b4eb9a3c6c7e1938aa59dd785e011399d61fefc235d89fd4a4b9eedd2ad",
+      "file_path": "E:\\New USER\\Desktop\\projects\\TrustTraceAI\\backend\\uploads\\demo_files\\Axis_Bank_Customer_Statement_Aug2026.pdf",
+      "category": "Financial Document",
+      "classification": "Likely Text-Based PDF",
+      "metadata": {
+        "creation_date": "D:20261013005846+05'00'",
+        "modification_date": "D:20261013005846+05'00'",
+        "author": "(anonymous)",
+        "creator": "(unspecified)",
+        "producer": "ReportLab PDF Library - (opensource)",
+        "page_count": 1,
+        "pdf_version": "1.7",
+        "file_size_bytes": 2492,
+        "file_hash": "588d1b4eb9a3c6c7e1938aa59dd785e011399d61fefc235d89fd4a4b9eedd2ad",
+        "completeness_score": 1.0,
+        "has_digital_signatures": false,
+        "font_count": 3,
+        "embedded_images_count": 0,
+        "is_encrypted": false
+      },
+      "extracted_text": "NATIONAL APEX BANK — ACCOUNT DEBIT STATEMENT\nE-Statement for A/C ****4491 • August 2026 (FICTIONAL DEMONSTRATION RECORD)\nAccount Holder\nAnanya Sharma\nStatement Period\n01-Aug-2026 to 31-Aug-2026\nDebit Date\n19-Aug-2026\nTransaction Description\nUPI-IMPS/METROPOLITAN-HOSP/UTR-9928190\nDebit Amount\nI22,500.00 (Variance of I2,500 vs I25,000 Bill)\nAvailable Balance\nI1,42,100.00\nReference Number\nUTR-99281904412\nInternal Forensic Annotation: Third-party bank statement reflecting debit entry of I22,500 instead of I25,000\nclaimed bill.",
+      "extracted_fields": {
+        "amounts": [],
+        "dates": [],
+        "document_numbers": [
+          "DEBIT",
+          "Holder",
+          "Description",
+          "erence",
+          "lecting"
+        ],
+        "reference_ids": [
+          "UTR-9928190",
+          "UTR-99281904412"
+        ],
+        "organizations": [
+          "NATIONAL APEX BANK — ACCOUNT DEBIT STATEMENT"
+        ],
+        "names": [],
+        "payment_references": [
+          "UTR-99281904412"
+        ],
+        "claims": []
+      },
+      "source_details": {
+        "issuing_organization": "National Apex Bank",
+        "source_name": "National Apex Bank Official Channel",
+        "date_received": "2026-08-20",
+        "original_source_url": "https://metropolitan.healthcare/portal",
+        "reviewer_notes": "Demonstration evidence item for reimbursement assessment."
+      },
+      "processing_status": "analyzed",
+      "upload_timestamp": "2026-10-12T19:28:46.682404",
+      "reviewer_notes": ""
+    }
+  },
+  "claims": {},
+  "findings": {
+    "inv-demo-hospital-reimbursement": [
+      {
+        "id": "cd9648a9-d78e-481a-aaab-dc32c85a1682",
+        "finding_id": "FND-001",
+        "investigation_id": "inv-demo-hospital-reimbursement",
+        "category": "Potential Dependency",
+        "severity": "Low",
+        "affected_claim": "A hospital bill of ₹25,000 was paid.",
+        "affected_document_ids": [
+          "doc-hospital_inpatient_bill_",
+          "doc-hospital_cash_receipt_re",
+          "doc-insurance_claim_email_co"
+        ],
+        "exact_field_or_passage": "Organization: Metropolitan General Hospital",
+        "page_number": 1,
+        "explanation": "Multiple evidence items (Hospital_Inpatient_Bill_INV-8821.pdf, Hospital_Cash_Receipt_REC-4019.pdf, Insurance_Claim_Email_Confirmation.txt) originate from or reference the same entity 'Metropolitan General Hospital'.",
+        "supporting_observations": [
+          "Documents share a single institutional origin, indicating they may not provide independent corroboration.",
+          "Evidence independence requires verification from a separate third-party institution (e.g. banking settlement network)."
+        ],
+        "suggested_verification_step": "Obtain independent third-party confirmation from a neutral entity not affiliated with the issuing organization.",
+        "reviewer_status": "Open",
+        "reviewer_notes": ""
+      }
+    ]
+  },
+  "relationships": {},
+  "versions": {
+    "inv-demo-hospital-reimbursement": [
+      {
+        "version_number": 1,
+        "investigation_id": "inv-demo-hospital-reimbursement",
+        "timestamp": "2026-10-12T19:28:46.749442",
+        "document_ids": [
+          "doc-hospital_inpatient_bill_",
+          "doc-hospital_cash_receipt_re",
+          "doc-insurance_claim_email_co"
+        ],
+        "document_count": 3,
+        "findings_count": 1,
+        "summary": "Initial submission: Hospital Bill, Receipt, and Email Confirmation examined. Documents are internally concordant but share common origin.",
+        "claims_state": [
+          {
+            "id": "claim_inv-demo-hospital-reimbursement",
+            "claim_text": "A hospital bill of ₹25,000 was paid.",
+            "status": "Partially Supported"
+          }
+        ],
+        "findings_state": [
+          {
+            "id": "cd9648a9-d78e-481a-aaab-dc32c85a1682",
+            "finding_id": "FND-001",
+            "investigation_id": "inv-demo-hospital-reimbursement",
+            "category": "Potential Dependency",
+            "severity": "Low",
+            "affected_claim": "A hospital bill of ₹25,000 was paid.",
+            "affected_document_ids": [
+              "doc-hospital_inpatient_bill_",
+              "doc-hospital_cash_receipt_re",
+              "doc-insurance_claim_email_co"
+            ],
+            "exact_field_or_passage": "Organization: Metropolitan General Hospital",
+            "page_number": 1,
+            "explanation": "Multiple evidence items (Hospital_Inpatient_Bill_INV-8821.pdf, Hospital_Cash_Receipt_REC-4019.pdf, Insurance_Claim_Email_Confirmation.txt) originate from or reference the same entity 'Metropolitan General Hospital'.",
+            "supporting_observations": [
+              "Documents share a single institutional origin, indicating they may not provide independent corroboration.",
+              "Evidence independence requires verification from a separate third-party institution (e.g. banking settlement network)."
+            ],
+            "suggested_verification_step": "Obtain independent third-party confirmation from a neutral entity not affiliated with the issuing organization.",
+            "reviewer_status": "Open",
+            "reviewer_notes": ""
+          }
+        ]
+      }
+    ]
+  },
+  "audit_actions": {
+    "inv-demo-hospital-reimbursement": [
+      {
+        "id": "audit-init-demo",
+        "investigation_id": "inv-demo-hospital-reimbursement",
+        "timestamp": "2026-10-12T19:28:46.766166",
+        "reviewer": "Senior Investigator",
+        "action_type": "investigation_created",
+        "description": "Demonstration case 'Hospital Reimbursement Review' initialized with 4 evidence files.",
+        "metadata": {
+          "case_reference": "MED-2026-991"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "user_profile": {
+      "name": "Senior Investigator",
+      "role": "Lead Digital Forensics Reviewer",
+      "email": "investigator@trusttrace.ai"
+    },
+    "notification_preferences": {
+      "email_alerts": true,
+      "critical_contradictions": true,
+      "weekly_digest": false
+    },
+    "data_retention_days": 90,
+    "llm_provider": "none",
+    "gemini_api_key": "",
+    "openai_api_key": "",
+    "deterministic_strictness": "Standard"
+  }
+}

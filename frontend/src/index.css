@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #F8F5EF;
+    --bg-secondary: #EFE6D8;
+    --bg-card: #FFFDFA;
+    --brand-primary: #49372C;
+    --brand-secondary: #725541;
+    --accent-copper: #B8754D;
+    --accent-tan: #CBA783;
+    --border-color: #E4D8C8;
+    --text-primary: #302820;
+    --text-secondary: #786C60;
+    --color-success: #2D5A3A;
+    --color-warning: #B45309;
+    --color-danger: #991B1B;
+  }
+
+  body {
+    margin: 0;
+    background-color: #F8F5EF;
+    color: #302820;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Manrope', 'Inter', sans-serif;
+    color: #49372C;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #EFE6D8;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBA783;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8754D;
+}
+
+/* React Flow custom styling */
+.react-flow__attribution {
+  display: none !important;
+}
+.react-flow__node {
+  cursor: pointer;
+}
+.react-flow__handle {
+  background-color: #B8754D !important;
+}
