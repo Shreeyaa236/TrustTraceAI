@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
-  GitCompare,
-  PlusCircle,
-  FileText,
   AlertTriangle,
-  CheckCircle2,
-  ArrowRight,
-  Layers,
   RotateCw,
   Download
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { api } from '../services/api';
 import { VersionComparison } from '../types';
-import { Badge } from '../components/Badge';
 
 export const VersionCompare: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -163,7 +156,11 @@ export const VersionCompare: React.FC = () => {
         </a>
       </div>
 
-      {comparison && (
+      {loading ? (
+        <div className="p-8 text-center text-xs text-[#786C60] bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl">
+          Calculating incremental version differential...
+        </div>
+      ) : comparison ? (
         <div className="space-y-6">
           {/* Summary Banner */}
           <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
@@ -255,7 +252,7 @@ export const VersionCompare: React.FC = () => {
             </div>
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

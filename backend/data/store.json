@@ -374,5 +374,35 @@
     "gemini_api_key": "",
     "openai_api_key": "",
     "deterministic_strictness": "Standard"
-  }
+  },
+  "users": {
+    "usr-investigator-001": {
+      "id": "usr-investigator-001",
+      "email": "investigator@trusttrace.ai",
+      "username": "investigator",
+      "password_hash": "$2b$12$kBNpf9P0ibGU2lHrtAekZ.SQVvWSJykemf9ZxPRlhTVXBBKD1JTPm",
+      "full_name": "Senior Forensic Investigator",
+      "role": "Lead Digital Forensics Reviewer",
+      "created_at": "2026-01-01T00:00:00Z"
+    },
+    "usr-d45412eb96": {
+      "id": "usr-d45412eb96",
+      "email": "test@test.com",
+      "username": "testuser",
+      "password_hash": "$2b$12$Ezmt4AZhq1tgtv6N672ixep8N4jv9aU9gRsodF8n5s13vqYOXx2fm",
+      "full_name": "Testuser",
+      "role": "Lead Digital Forensics Reviewer",
+      "created_at": "2026-10-13T15:32:45.119982"
+    },
+    "usr-071b0d06c3": {
+      "id": "usr-071b0d06c3",
+      "email": "abc123@gmail.com",
+      "username": "arya",
+      "password_hash": "$2b$12$BDCzQ08.EU0ggKzADxzWd.1jq3vCym7ER5YEPomsIxFQ6cZamkHuW",
+      "full_name": "Arya",
+      "role": "Lead Digital Forensics Reviewer",
+      "created_at": "2026-10-13T15:36:31.931703"
+    }
+  },
+  "jobs": {}
 }

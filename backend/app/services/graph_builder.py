@@ -95,6 +95,9 @@ def build_provenance_graph(
             "id": edge_id,
             "source": d_node_id,
             "target": claim_node_id,
+            "sourceHandle": "doc-top",
+            "targetHandle": "claim-bottom",
+            "type": "smoothstep",
             "label": edge_label,
             "animated": edge_label == "CONTRADICTS",
             "style": {
@@ -115,7 +118,6 @@ def build_provenance_graph(
     for idx, doc in enumerate(active_docs):
         d_node_id = doc_node_ids[doc["id"]]
         amts = doc.get("extracted_fields", {}).get("amounts", [])
-        refs = doc.get("extracted_fields", {}).get("document_numbers", []) + doc.get("extracted_fields", {}).get("reference_ids", [])
 
         # Take first amount if any
         if amts and amts[0] not in added_facts:
@@ -148,6 +150,9 @@ def build_provenance_graph(
                 "id": edge_id,
                 "source": d_node_id,
                 "target": f_node_id,
+                "sourceHandle": "doc-bottom",
+                "targetHandle": "fact-top",
+                "type": "smoothstep",
                 "label": "REFERENCES",
                 "style": {"stroke": "#725541", "strokeDasharray": "4 4"},
                 "data": {"relationship": "REFERENCES", "explanation": f"Document asserts recorded amount of {amt_val}."}
@@ -193,6 +198,9 @@ def build_provenance_graph(
                 "id": edge_id,
                 "source": s_node_id,
                 "target": d_node_id,
+                "sourceHandle": "source-top",
+                "targetHandle": "doc-bottom",
+                "type": "smoothstep",
                 "label": "ISSUED_BY",
                 "style": {"stroke": "#B8754D", "strokeWidth": 2},
                 "data": {"relationship": "ISSUED_BY", "explanation": f"Evidence is attributed to issuing entity: {org}."}
@@ -245,6 +253,9 @@ def build_provenance_graph(
                 "id": edge_id,
                 "source": f_node_id,
                 "target": d_node_id,
+                "sourceHandle": "finding-left",
+                "targetHandle": "doc-right",
+                "type": "smoothstep",
                 "label": rel,
                 "style": {"stroke": "#B91C1C" if f["severity"] == "High" else "#B45309"},
                 "data": {"relationship": rel, "explanation": f["explanation"]}

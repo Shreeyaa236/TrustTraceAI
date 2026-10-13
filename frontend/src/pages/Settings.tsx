@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Settings as SettingsIcon,
   User,
-  Bell,
   Database,
-  Shield,
   Cpu,
   Save,
-  CheckCircle2,
-  Trash2,
-  AlertTriangle
+  Trash2
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useInvestigation } from '../context/InvestigationContext';
 
 export const Settings: React.FC = () => {
   const { refreshInvestigations } = useInvestigation();
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [llmStatus, setLlmStatus] = useState<any>(null);
 
@@ -31,7 +25,6 @@ export const Settings: React.FC = () => {
 
   const [retentionDays, setRetentionDays] = useState(90);
   const [llmProvider, setLlmProvider] = useState('none');
-  const [geminiKey, setGeminiKey] = useState('');
   const [strictness, setStrictness] = useState('Standard');
 
   useEffect(() => {
@@ -52,7 +45,6 @@ export const Settings: React.FC = () => {
         if (s.deterministic_strictness) setStrictness(s.deterministic_strictness);
       }
       setLlmStatus(l);
-      setLoading(false);
     }).catch(console.error);
   }, []);
 

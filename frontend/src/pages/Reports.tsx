@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  FileText,
   Download,
-  Printer,
-  ShieldCheck,
-  Building,
-  CheckCircle2,
-  AlertTriangle,
-  Info,
-  Calendar,
-  Layers,
-  ArrowRight
+  Printer
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { api } from '../services/api';
@@ -23,6 +14,7 @@ export const Reports: React.FC = () => {
 
   const [reportData, setReportData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [generatedDate] = useState(() => new Date().toUTCString());
 
   const targetId = id || activeInvestigation?.id || 'demo';
 
@@ -101,7 +93,7 @@ export const Reports: React.FC = () => {
           <div className="text-left sm:text-right text-[11px] text-[#786C60] space-y-1">
             <div>Case Ref: <b className="text-[#49372C]">{investigation.case_reference || 'REF-N/A'}</b></div>
             <div>Analysis Version: <b className="text-[#49372C]">Version {investigation.current_version}</b></div>
-            <div>Generated: {new Date().toUTCString()}</div>
+            <div>Generated: {generatedDate}</div>
           </div>
         </div>
 

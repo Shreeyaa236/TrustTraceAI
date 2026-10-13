@@ -21,6 +21,11 @@ export interface DocumentMetadata {
   font_count: number;
   embedded_images_count: number;
   is_encrypted: boolean;
+  extraction_method?: string;
+  ocr_status?: string;
+  ocr_pages?: number[];
+  ocr_confidence?: number;
+  image_dimensions?: string;
 }
 
 export interface ExtractedFields {
@@ -51,6 +56,7 @@ export interface DocumentItem {
   processing_status: 'uploaded' | 'processing' | 'analyzed' | 'error';
   upload_timestamp: string;
   reviewer_notes?: string;
+  ocr_details?: Record<string, any>;
 }
 
 export interface DimensionAssessment {
@@ -72,6 +78,7 @@ export interface EvidenceGap {
   recommended_step: string;
   related_document_ids: string[];
   status: string;
+  ai_enhanced_recommendation?: string;
 }
 
 export interface Finding {
@@ -90,6 +97,9 @@ export interface Finding {
   reviewer_status: 'Open' | 'Under Review' | 'Confirmed Finding' | 'Resolved' | 'Dismissed';
   reviewer_notes?: string;
   created_at: string;
+  is_ai_assisted?: boolean;
+  ai_explanation?: string;
+  ai_analysis?: Record<string, any>;
 }
 
 export interface Investigation {
@@ -100,6 +110,8 @@ export interface Investigation {
   category: string;
   primary_claim: string;
   creator: string;
+  creator_id?: string;
+  creator_email?: string;
   created_at: string;
   updated_at: string;
   current_version: number;
@@ -132,6 +144,9 @@ export interface ProvenanceGraphData {
     source: string;
     target: string;
     label: string;
+    sourceHandle?: string;
+    targetHandle?: string;
+    type?: string;
     animated?: boolean;
     style?: Record<string, any>;
     data?: Record<string, any>;
@@ -182,4 +197,57 @@ export interface VersionComparison {
   claims_requiring_review: string[];
   changed_relationships: Array<{ type: string; count: number; description: string }>;
   summary: string;
+}
+
+// --- AUTH TYPES ---
+export interface User {
+  id: string;
+  email: string;
+  username: string;
+  full_name: string;
+  role: string;
+  created_at: string;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  user: User;
+}
+
+// --- BACKGROUND JOB TYPES ---
+export interface Job {
+  job_id: string;
+  investigation_id: string;
+  job_type: string;
+  status: 'queued' | 'processing' | 'completed' | 'failed';
+  progress_stage: string;
+  error?: string | null;
+  created_at: string;
+  completed_at?: string | null;
+  result_summary?: Record<string, any>;
+}
+
+// --- TIMELINE TYPES ---
+export interface TimelineEvent {
+  id: string;
+  investigation_id: string;
+  document_id?: string;
+  document_name: string;
+  category: string;
+  date_str: string;
+  date_type: string;
+  parsed_date?: string | null;
+  description: string;
+  is_conflict: boolean;
+  conflict_details?: string | null;
+  related_finding_id?: string | null;
+}
+
+export interface TimelineResponse {
+  investigation_id: string;
+  events: TimelineEvent[];
+  total_events: number;
+  conflicts_count: number;
+  date_range?: { start: string; end: string } | null;
 }

@@ -1,17 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   UploadCloud,
-  File,
   X,
   CheckCircle2,
   AlertCircle,
   Shield,
-  FileText,
-  Trash2,
   ArrowRight,
-  Info,
   Building,
-  RotateCcw
+  FileText
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -55,17 +51,16 @@ export const UploadEvidence: React.FC = () => {
   // Optional source details
   const [issuingOrg, setIssuingOrg] = useState('');
   const [sourceName, setSourceName] = useState('');
-  const [dateReceived, setDateReceived] = useState(new Date().toISOString().slice(0, 10));
+  const [dateReceived, setDateReceived] = useState(() => new Date().toISOString().slice(0, 10));
   const [reviewerNotes, setReviewerNotes] = useState('');
 
   const [uploadingAll, setUploadingAll] = useState(false);
-  const [completedCount, setCompletedCount] = useState(0);
 
   useEffect(() => {
     if (id && (!activeInvestigation || activeInvestigation.id !== id)) {
       selectInvestigationById(id);
     }
-  }, [id]);
+  }, [id, activeInvestigation, selectInvestigationById]);
 
   const targetId = id || activeInvestigation?.id || 'demo';
 
@@ -122,22 +117,30 @@ export const UploadEvidence: React.FC = () => {
       setQueue((prev) => prev.map((q) => ({ ...q, status: 'uploading', progress: 50 })));
 
       const rawFiles = queue.map((q) => q.file);
-      // Group by category or use primary
       const primaryCat = queue[0]?.category || 'Unknown / Needs Review';
 
-      const res = await api.uploadDocuments(
+      // Pass each file's specific selected category in the metadata manifest (Task 2)
+      const fileMetadata = queue.map((q) => ({
+        filename: q.file.name,
+        category: q.category || 'Unknown / Needs Review',
+        issuing_organization: issuingOrg,
+        source_name: sourceName,
+        reviewer_notes: reviewerNotes,
+      }));
+
+      await api.uploadDocuments(
         targetId,
         rawFiles,
         primaryCat,
         issuingOrg,
         sourceName,
-        reviewerNotes
+        reviewerNotes,
+        fileMetadata
       );
 
       setQueue((prev) =>
         prev.map((q) => ({ ...q, status: 'completed', progress: 100 }))
       );
-      setCompletedCount((c) => c + rawFiles.length);
       await refreshInvestigations();
 
       // Prompt to proceed to analysis

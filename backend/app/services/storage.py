@@ -18,6 +18,7 @@ class StorageService:
         self._init_mongo()
         if not self.use_mongo:
             self._init_json_store()
+        self._seed_default_user_if_needed()
 
     def _init_mongo(self):
         try:
@@ -43,6 +44,8 @@ class StorageService:
                     "relationships": {},
                     "versions": {},
                     "audit_actions": {},
+                    "users": {},
+                    "jobs": {},
                     "settings": {
                         "user_profile": {"name": "Senior Investigator", "role": "Lead Digital Forensics Reviewer", "email": "investigator@trusttrace.ai"},
                         "notification_preferences": {"email_alerts": True, "critical_contradictions": True, "weekly_digest": False},
@@ -62,22 +65,103 @@ class StorageService:
                 self._init_json_store()
             try:
                 with open(self.json_file, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    if "users" not in data:
+                        data["users"] = {}
+                    if "jobs" not in data:
+                        data["jobs"] = {}
+                    return data
             except Exception:
-                return {}
+                return {"users": {}, "jobs": {}, "investigations": {}, "documents": {}}
 
     def _write_json(self, data: Dict[str, Any]):
         with self.lock:
             with open(self.json_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
 
-    # --- INVESTIGATIONS ---
-    def get_investigations(self) -> List[Dict[str, Any]]:
+    def _seed_default_user_if_needed(self):
+        try:
+            from app.services.auth import hash_password
+            existing = self.get_user_by_email("investigator@trusttrace.ai")
+            if not existing:
+                default_user = {
+                    "id": "usr-investigator-001",
+                    "email": "investigator@trusttrace.ai",
+                    "username": "investigator",
+                    "password_hash": hash_password("TrustTrace2026!"),
+                    "full_name": "Senior Forensic Investigator",
+                    "role": "Lead Digital Forensics Reviewer",
+                    "created_at": "2026-01-01T00:00:00Z"
+                }
+                self.save_user(default_user)
+                logger.info("Seeded default investigator user account.")
+        except Exception as e:
+            logger.debug(f"Default user seeding skipped: {e}")
+
+    # --- USERS ---
+    def save_user(self, user: Dict[str, Any]):
         if self.use_mongo:
-            docs = list(self.db.investigations.find({}, {"_id": 0}))
+            self.db.users.update_one({"id": user["id"]}, {"$set": user}, upsert=True)
+            return
+        data = self._read_json()
+        if "users" not in data:
+            data["users"] = {}
+        data["users"][user["id"]] = user
+        self._write_json(data)
+
+    def get_user_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
+        if self.use_mongo:
+            return self.db.users.find_one({"id": user_id}, {"_id": 0})
+        data = self._read_json()
+        return data.get("users", {}).get(user_id)
+
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        if self.use_mongo:
+            return self.db.users.find_one({"email": email.lower().strip()}, {"_id": 0})
+        data = self._read_json()
+        for u in data.get("users", {}).values():
+            if u.get("email", "").lower().strip() == email.lower().strip():
+                return u
+        return None
+
+    def get_user_by_username(self, username: str) -> Optional[Dict[str, Any]]:
+        if self.use_mongo:
+            return self.db.users.find_one({"username": username.lower().strip()}, {"_id": 0})
+        data = self._read_json()
+        for u in data.get("users", {}).values():
+            if u.get("username", "").lower().strip() == username.lower().strip():
+                return u
+        return None
+
+    # --- JOBS (BACKGROUND PROCESSING) ---
+    def save_job(self, job: Dict[str, Any]):
+        if self.use_mongo:
+            self.db.jobs.update_one({"job_id": job["job_id"]}, {"$set": job}, upsert=True)
+            return
+        data = self._read_json()
+        if "jobs" not in data:
+            data["jobs"] = {}
+        data["jobs"][job["job_id"]] = job
+        self._write_json(data)
+
+    def get_job(self, job_id: str) -> Optional[Dict[str, Any]]:
+        if self.use_mongo:
+            return self.db.jobs.find_one({"job_id": job_id}, {"_id": 0})
+        data = self._read_json()
+        return data.get("jobs", {}).get(job_id)
+
+    # --- INVESTIGATIONS ---
+    def get_investigations(self, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        if self.use_mongo:
+            query = {}
+            if user_id:
+                query = {"$or": [{"creator_id": user_id}, {"is_demo": True}]}
+            docs = list(self.db.investigations.find(query, {"_id": 0}))
             return sorted(docs, key=lambda x: x.get("updated_at", ""), reverse=True)
         data = self._read_json()
         items = list(data.get("investigations", {}).values())
+        if user_id:
+            items = [i for i in items if i.get("creator_id") == user_id or i.get("is_demo") is True or not i.get("creator_id")]
         return sorted(items, key=lambda x: x.get("updated_at", ""), reverse=True)
 
     def get_investigation(self, inv_id: str) -> Optional[Dict[str, Any]]:
@@ -241,7 +325,6 @@ class StorageService:
             data["versions"] = {}
         if inv_id not in data["versions"]:
             data["versions"][inv_id] = []
-        # Replace if version exists, or append
         vers = [v for v in data["versions"][inv_id] if v["version_number"] != version_snapshot["version_number"]]
         vers.append(version_snapshot)
         vers.sort(key=lambda x: x["version_number"])

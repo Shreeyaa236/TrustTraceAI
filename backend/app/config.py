@@ -20,3 +20,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 DATA_RETENTION_DAYS = int(os.getenv("DATA_RETENTION_DAYS", "90"))
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "trusttrace_default_dev_secret_key_2026")
+JWT_EXPIRATION_HOURS = int(os.getenv("JWT_EXPIRATION_HOURS", "24"))
+
+# OCR Configuration
+TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")

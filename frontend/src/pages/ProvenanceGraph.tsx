@@ -15,34 +15,32 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {
-  GitBranch,
   Search,
-  Filter,
-  Layers,
   FileText,
-  AlertTriangle,
   Building,
-  CheckCircle2,
   X,
-  ExternalLink,
-  ShieldCheck,
-  Maximize2
+  ExternalLink
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { api } from '../services/api';
-import { ProvenanceGraphData } from '../types';
 import { Badge } from '../components/Badge';
 
-// --- CUSTOM NODE COMPONENTS ---
+// --- CUSTOM NODE COMPONENTS WITH DIRECTIONAL HANDLES (TASK 6) ---
 
 // 1. Claim Node
 const ClaimNode = ({ data, selected }: { data: any; selected?: boolean }) => (
   <div
-    className={`px-4 py-3 bg-[#FFFDFA] border-2 rounded-xl shadow-md min-w-[240px] max-w-[320px] transition-all ${
+    className={`px-4 py-3 bg-[#FFFDFA] border-2 rounded-xl shadow-md min-w-[240px] max-w-[320px] transition-all relative ${
       selected ? 'border-[#B8754D] ring-2 ring-[#B8754D]/30' : 'border-[#49372C]'
     }`}
   >
-    <Handle type="target" position={Position.Bottom} className="w-2.5 h-2.5 bg-[#49372C]" />
+    {/* Target handle from documents below */}
+    <Handle
+      id="claim-bottom"
+      type="target"
+      position={Position.Bottom}
+      className="w-2.5 h-2.5 bg-[#49372C] hover:scale-125 transition-transform"
+    />
     <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#786C60]">
       <span>Primary Claim</span>
       <Badge variant="status">{data.status || 'Active'}</Badge>
@@ -54,18 +52,44 @@ const ClaimNode = ({ data, selected }: { data: any; selected?: boolean }) => (
       <span>{data.category}</span>
       <span className="font-semibold">{data.connected_count || 0} links</span>
     </div>
-    <Handle type="source" position={Position.Top} className="w-2.5 h-2.5 bg-[#49372C]" />
+    <Handle
+      id="claim-top"
+      type="source"
+      position={Position.Top}
+      className="w-2.5 h-2.5 bg-[#49372C]"
+    />
   </div>
 );
 
 // 2. Document Node
 const DocumentNode = ({ data, selected }: { data: any; selected?: boolean }) => (
   <div
-    className={`px-3 py-2.5 bg-[#FFFDFA] border rounded-lg shadow-sm min-w-[210px] max-w-[260px] transition-all ${
+    className={`px-3 py-2.5 bg-[#FFFDFA] border rounded-lg shadow-sm min-w-[210px] max-w-[260px] transition-all relative ${
       selected ? 'border-[#B8754D] ring-2 ring-[#B8754D]/30' : 'border-[#E4D8C8] hover:border-[#CBA783]'
     }`}
   >
-    <Handle type="target" position={Position.Top} className="w-2 h-2 bg-[#725541]" />
+    {/* Upward source to claim */}
+    <Handle
+      id="doc-top"
+      type="source"
+      position={Position.Top}
+      className="w-2 h-2 bg-[#725541]"
+    />
+    {/* Right target from findings */}
+    <Handle
+      id="doc-right"
+      type="target"
+      position={Position.Right}
+      className="w-2 h-2 bg-[#725541]"
+    />
+    {/* Left target */}
+    <Handle
+      id="doc-left"
+      type="target"
+      position={Position.Left}
+      className="w-2 h-2 bg-[#725541]"
+    />
+
     <div className="flex items-center space-x-2">
       <div className="w-6 h-6 rounded bg-[#EFE6D8] flex items-center justify-center text-[#725541] shrink-0">
         <FileText className="w-3.5 h-3.5 text-[#B8754D]" />
@@ -79,56 +103,93 @@ const DocumentNode = ({ data, selected }: { data: any; selected?: boolean }) => 
       <span className="text-[#786C60]">{data.classification?.replace('PDF', '').trim()}</span>
       <span className="font-mono text-[#B8754D] font-semibold">{data.extracted_amounts?.[0] || 'No Amt'}</span>
     </div>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2 bg-[#725541]" />
+
+    {/* Downward source to facts / target from source issuers */}
+    <Handle
+      id="doc-bottom"
+      type="source"
+      position={Position.Bottom}
+      className="w-2 h-2 bg-[#725541]"
+    />
   </div>
 );
 
 // 3. Fact Node
 const FactNode = ({ data, selected }: { data: any; selected?: boolean }) => (
   <div
-    className={`px-3 py-1.5 bg-[#EFE6D8] border rounded-md shadow-2xs min-w-[140px] text-center transition-all ${
+    className={`px-3 py-1.5 bg-[#EFE6D8] border rounded-md shadow-2xs min-w-[140px] text-center transition-all relative ${
       selected ? 'border-[#B8754D] ring-2 ring-[#B8754D]/30' : 'border-[#CBA783]'
     }`}
   >
-    <Handle type="target" position={Position.Top} className="w-2 h-2 bg-[#725541]" />
+    <Handle
+      id="fact-top"
+      type="target"
+      position={Position.Top}
+      className="w-2 h-2 bg-[#725541]"
+    />
     <div className="text-[9px] uppercase font-bold text-[#786C60]">{data.fact_type || 'Extracted Fact'}</div>
     <div className="font-bold text-xs text-[#49372C]">{data.value || data.label}</div>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2 bg-[#725541]" />
+    <Handle
+      id="fact-bottom"
+      type="source"
+      position={Position.Bottom}
+      className="w-2 h-2 bg-[#725541]"
+    />
   </div>
 );
 
 // 4. Source Node
 const SourceNode = ({ data, selected }: { data: any; selected?: boolean }) => (
   <div
-    className={`px-3 py-2 bg-[#F8F5EF] border border-[#B8754D]/40 rounded-lg shadow-2xs min-w-[180px] transition-all ${
+    className={`px-3 py-2 bg-[#F8F5EF] border border-[#B8754D]/40 rounded-lg shadow-2xs min-w-[180px] transition-all relative ${
       selected ? 'ring-2 ring-[#B8754D]/30' : ''
     }`}
   >
-    <Handle type="target" position={Position.Top} className="w-2 h-2 bg-[#B8754D]" />
+    <Handle
+      id="source-top"
+      type="source"
+      position={Position.Top}
+      className="w-2 h-2 bg-[#B8754D]"
+    />
     <div className="flex items-center space-x-1.5 text-[10px] font-bold text-[#B8754D]">
       <Building className="w-3 h-3" />
       <span>Source / Origin</span>
     </div>
     <div className="font-bold text-xs text-[#49372C] mt-0.5 truncate">{data.organization || data.label}</div>
     <div className="text-[10px] text-[#786C60] mt-0.5">{data.verification_status}</div>
-    <Handle type="source" position={Position.Bottom} className="w-2 h-2 bg-[#B8754D]" />
+    <Handle
+      id="source-bottom"
+      type="target"
+      position={Position.Bottom}
+      className="w-2 h-2 bg-[#B8754D]"
+    />
   </div>
 );
 
 // 5. Finding Node
 const FindingNode = ({ data, selected }: { data: any; selected?: boolean }) => (
   <div
-    className={`px-3 py-2 bg-[#FFFDFA] border rounded-lg shadow-sm min-w-[180px] max-w-[220px] transition-all ${
+    className={`px-3 py-2 bg-[#FFFDFA] border rounded-lg shadow-sm min-w-[180px] max-w-[220px] transition-all relative ${
       data.severity === 'High' ? 'border-[#991B1B]/40 bg-[#FEE2E2]/20' : 'border-[#B45309]/40 bg-[#FEF3C7]/20'
     } ${selected ? 'ring-2 ring-[#B8754D]/30' : ''}`}
   >
-    <Handle type="target" position={Position.Left} className="w-2 h-2 bg-[#991B1B]" />
+    <Handle
+      id="finding-left"
+      type="source"
+      position={Position.Left}
+      className="w-2 h-2 bg-[#991B1B]"
+    />
     <div className="flex items-center justify-between text-[10px]">
       <span className="font-mono font-bold text-[#49372C]">{data.finding_id}</span>
       <Badge variant="severity">{data.severity}</Badge>
     </div>
     <div className="font-semibold text-xs text-[#49372C] mt-1 line-clamp-2">{data.explanation}</div>
-    <Handle type="source" position={Position.Right} className="w-2 h-2 bg-[#991B1B]" />
+    <Handle
+      id="finding-right"
+      type="target"
+      position={Position.Right}
+      className="w-2 h-2 bg-[#991B1B]"
+    />
   </div>
 );
 
@@ -139,13 +200,12 @@ export const ProvenanceGraph: React.FC = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [selectedNodeData, setSelectedNodeData] = useState<any | null>(null);
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
   const [nodeTypeFilter, setNodeTypeFilter] = useState('All');
-  const [relationshipFilter, setRelationshipFilter] = useState('All');
 
   const targetId = id || activeInvestigation?.id || 'demo';
 
@@ -160,11 +220,11 @@ export const ProvenanceGraph: React.FC = () => {
     []
   );
 
-  const fetchGraph = async () => {
+  const fetchGraph = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.getProvenanceGraph(targetId);
-      
+
       const formattedNodes: Node[] = res.nodes.map((n) => ({
         id: n.id,
         type: n.type,
@@ -176,12 +236,15 @@ export const ProvenanceGraph: React.FC = () => {
         id: e.id,
         source: e.source,
         target: e.target,
+        sourceHandle: e.sourceHandle || undefined,
+        targetHandle: e.targetHandle || undefined,
+        type: e.type || 'smoothstep',
         label: e.label,
         animated: e.animated,
         style: e.style || { stroke: '#725541', strokeWidth: 1.5 },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          color: e.style?.stroke || '#725541',
+          color: (e.style && e.style.stroke) || '#725541',
         },
         data: e.data,
       }));
@@ -193,14 +256,14 @@ export const ProvenanceGraph: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [targetId, setNodes, setEdges]);
 
   useEffect(() => {
     if (id && (!activeInvestigation || activeInvestigation.id !== id)) {
       selectInvestigationById(id);
     }
     fetchGraph();
-  }, [id, targetId]);
+  }, [id, activeInvestigation, selectInvestigationById, fetchGraph]);
 
   const onNodeClick = useCallback((_: any, node: Node) => {
     setSelectedNodeData(node.data);
@@ -209,6 +272,22 @@ export const ProvenanceGraph: React.FC = () => {
   const onPaneClick = useCallback(() => {
     setSelectedNodeData(null);
   }, []);
+
+  // Filtered nodes
+  const displayNodes = useMemo(() => {
+    return nodes.filter((n) => {
+      if (nodeTypeFilter !== 'All' && n.type !== nodeTypeFilter) {
+        return false;
+      }
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const label = String(n.data?.label || '').toLowerCase();
+        const cat = String(n.data?.category || '').toLowerCase();
+        return label.includes(query) || cat.includes(query);
+      }
+      return true;
+    });
+  }, [nodes, nodeTypeFilter, searchQuery]);
 
   return (
     <div className="space-y-4 h-[calc(100vh-7rem)] flex flex-col">
@@ -263,13 +342,14 @@ export const ProvenanceGraph: React.FC = () => {
         {/* React Flow Container */}
         <div className="flex-1 h-full w-full">
           <ReactFlow
-            nodes={nodes}
+            nodes={displayNodes}
             edges={edges}
             nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeClick={onNodeClick}
             onPaneClick={onPaneClick}
+            defaultEdgeOptions={{ type: 'smoothstep' }}
             fitView
             minZoom={0.2}
             maxZoom={2}
@@ -288,7 +368,7 @@ export const ProvenanceGraph: React.FC = () => {
           </ReactFlow>
         </div>
 
-        {/* Selected Node Inspection Side Panel (Section 11 requirement) */}
+        {/* Selected Node Inspection Side Panel */}
         {selectedNodeData && (
           <div className="w-80 md:w-96 border-l border-[#E4D8C8] bg-[#FFFDFA] p-5 overflow-y-auto z-20 flex flex-col justify-between shadow-lg animate-in slide-in-from-right-4 duration-150">
             <div className="space-y-4">

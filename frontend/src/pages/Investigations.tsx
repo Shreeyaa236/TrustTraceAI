@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import {
-  FolderKanban,
   Search,
   Plus,
-  Filter,
-  ArrowUpDown,
   ChevronRight,
-  Trash2,
-  ExternalLink,
-  ShieldCheck,
-  FileText
+  Trash2
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { Badge } from '../components/Badge';

@@ -1,20 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
-  FileText,
   Download,
-  Calendar,
-  Layers,
-  Shield,
-  Building,
-  CheckCircle2,
-  AlertCircle,
   Hash,
   ArrowLeft,
   Edit3,
-  Save,
-  Clock,
-  ExternalLink
+  Save
 } from 'lucide-react';
 import { api } from '../services/api';
 import { DocumentItem } from '../types';
@@ -35,15 +26,15 @@ const CATEGORIES = [
 ];
 
 export const DocumentDetail: React.FC = () => {
-  const { docId, id } = useParams<{ docId: string; id: string }>();
+  const { docId } = useParams<{ docId: string }>();
   const [doc, setDoc] = useState<DocumentItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [reviewerNotes, setReviewerNotes] = useState('');
-  const [activeTab, setActiveTab] = useState<'metadata' | 'extracted' | 'text' | 'preview'>('metadata');
+  const [activeTab, setActiveTab] = useState<'metadata' | 'extracted' | 'text'>('metadata');
 
-  const loadDocument = async () => {
+  const loadDocument = useCallback(async () => {
     if (!docId) return;
     try {
       setLoading(true);
@@ -56,11 +47,11 @@ export const DocumentDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [docId]);
 
   useEffect(() => {
     loadDocument();
-  }, [docId]);
+  }, [loadDocument]);
 
   const handleSaveCorrections = async () => {
     if (!docId) return;
@@ -210,7 +201,7 @@ export const DocumentDetail: React.FC = () => {
               : 'text-[#786C60] hover:text-[#49372C]'
           }`}
         >
-          PDF Structural Metadata
+          Structural & OCR Provenance
         </button>
         <button
           onClick={() => setActiveTab('extracted')}
@@ -234,10 +225,28 @@ export const DocumentDetail: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab 1: PyMuPDF Metadata Internals (Section 9 requirement) */}
+      {/* Tab 1: PyMuPDF Metadata & OCR Provenance */}
       {activeTab === 'metadata' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+            <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
+              <span className="text-[#786C60] font-semibold">Extraction Method</span>
+              <div className="font-bold text-[#49372C] text-sm mt-1 uppercase">
+                {doc.metadata?.extraction_method || 'native_text'}
+              </div>
+              <div className="text-[11px] text-[#786C60] mt-1">Native font stream or OCR engine</div>
+            </div>
+
+            <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
+              <span className="text-[#786C60] font-semibold">OCR Processing Status</span>
+              <div className="font-bold text-[#49372C] text-sm mt-1 capitalize">
+                {doc.metadata?.ocr_status || 'not_needed'}
+              </div>
+              <div className="text-[11px] text-[#786C60] mt-1">
+                {doc.metadata?.ocr_confidence ? `Average confidence: ${doc.metadata.ocr_confidence}%` : 'Tesseract status'}
+              </div>
+            </div>
+
             <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
               <span className="text-[#786C60] font-semibold">Producer Software</span>
               <div className="font-bold text-[#49372C] text-sm mt-1">
@@ -271,11 +280,11 @@ export const DocumentDetail: React.FC = () => {
             </div>
 
             <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
-              <span className="text-[#786C60] font-semibold">Embedded Raster Images</span>
+              <span className="text-[#786C60] font-semibold">Embedded Images / Dimensions</span>
               <div className="font-bold text-[#49372C] text-sm mt-1">
-                {doc.metadata?.embedded_images_count || 0} images
+                {doc.metadata?.image_dimensions || `${doc.metadata?.embedded_images_count || 0} images`}
               </div>
-              <div className="text-[11px] text-[#786C60] mt-1">Scanned pages or logos</div>
+              <div className="text-[11px] text-[#786C60] mt-1">Raster image presence</div>
             </div>
 
             <div className="p-4 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs">
@@ -289,7 +298,7 @@ export const DocumentDetail: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 2: Extracted Fields (Section 9 requirement) */}
+      {/* Tab 2: Extracted Fields */}
       {activeTab === 'extracted' && (
         <div className="p-5 bg-[#FFFDFA] border border-[#E4D8C8] rounded-xl shadow-2xs space-y-4">
           <h2 className="text-sm font-bold text-[#49372C]">

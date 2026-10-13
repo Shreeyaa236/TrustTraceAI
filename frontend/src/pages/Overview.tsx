@@ -8,14 +8,12 @@ import {
   UploadCloud,
   Search,
   ChevronRight,
-  ExternalLink,
   Sparkles,
-  ShieldAlert,
   ArrowRight
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { Badge } from '../components/Badge';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface OverviewProps {
   onOpenCreateModal: () => void;
@@ -193,6 +191,20 @@ export const Overview: React.FC<OverviewProps> = ({ onOpenCreateModal }) => {
               <option value="Review Required">Review Required</option>
               <option value="Analysis Complete">Analysis Complete</option>
               <option value="Failed">Failed</option>
+            </select>
+
+            {/* Category Filter */}
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-2.5 py-1.5 text-xs bg-[#F8F5EF] border border-[#E4D8C8] rounded-md text-[#302820] focus:outline-hidden focus:border-[#B8754D]"
+            >
+              <option value="All">All Categories</option>
+              <option value="Medical Reimbursement Claim">Medical Claim</option>
+              <option value="Financial Fraud">Financial Fraud</option>
+              <option value="Procurement Verification">Procurement</option>
+              <option value="Corporate Compliance">Compliance</option>
+              <option value="General Investigation">General</option>
             </select>
           </div>
         </div>

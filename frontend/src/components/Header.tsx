@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, Search, Bell, ChevronDown, Check, User, PlusCircle } from 'lucide-react';
+import { Menu, Search, Bell, ChevronDown, Check, User, PlusCircle, LogOut, LogIn } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
@@ -10,8 +11,10 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuClick, onOpenCreateModal }) => {
   const { investigations, activeInvestigation, setActiveInvestigation } = useInvestigation();
+  const { user, isAuthenticated, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
@@ -154,15 +157,57 @@ export const Header: React.FC<HeaderProps> = ({ onMenuClick, onOpenCreateModal }
           )}
         </div>
 
-        {/* User Profile Avatar */}
-        <div className="flex items-center space-x-2 pl-2 border-l border-[#E4D8C8]">
-          <div className="w-7 h-7 rounded-full bg-[#EFE6D8] border border-[#CBA783] flex items-center justify-center text-[#49372C] text-xs font-semibold">
-            <User className="w-4 h-4 text-[#725541]" />
-          </div>
-          <div className="hidden xl:block text-left">
-            <div className="text-xs font-semibold text-[#49372C] leading-none">Senior Investigator</div>
-            <div className="text-[10px] text-[#786C60] leading-none mt-1">Lead Forensics</div>
-          </div>
+        {/* User Profile Avatar & Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setUserMenuOpen(!userMenuOpen)}
+            className="flex items-center space-x-2 pl-2 border-l border-[#E4D8C8] hover:opacity-85 transition-opacity"
+          >
+            <div className="w-7 h-7 rounded-full bg-[#EFE6D8] border border-[#CBA783] flex items-center justify-center text-[#49372C] text-xs font-semibold">
+              <User className="w-4 h-4 text-[#725541]" />
+            </div>
+            <div className="hidden xl:block text-left">
+              <div className="text-xs font-semibold text-[#49372C] leading-none">
+                {user ? user.full_name : 'Guest Reviewer'}
+              </div>
+              <div className="text-[10px] text-[#786C60] leading-none mt-1">
+                {user ? user.role : 'Read Only'}
+              </div>
+            </div>
+          </button>
+
+          {userMenuOpen && (
+            <div className="absolute right-0 mt-2 w-56 bg-[#FFFDFA] border border-[#E4D8C8] rounded-lg shadow-lg py-1.5 z-50 text-xs">
+              <div className="px-3 py-2 border-b border-[#E4D8C8]">
+                <div className="font-semibold text-[#49372C]">{user?.full_name || 'Investigator'}</div>
+                <div className="text-[11px] text-[#786C60] truncate">{user?.email || 'Not logged in'}</div>
+              </div>
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    setUserMenuOpen(false);
+                    logout();
+                    navigate('/login');
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs font-semibold text-[#991B1B] hover:bg-[#FEE2E2] flex items-center space-x-1.5 transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    setUserMenuOpen(false);
+                    navigate('/login');
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs font-semibold text-[#B8754D] hover:bg-[#F8F5EF] flex items-center space-x-1.5 transition-colors"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Sign In</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -1,11 +1,12 @@
 import React from 'react';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   FolderKanban,
   UploadCloud,
   ScanSearch,
   GitBranch,
+  Clock,
   History,
   FileText,
   Settings,
@@ -31,6 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: 'Upload Evidence', to: `/investigations/${invId}/upload`, icon: UploadCloud },
     { name: 'Evidence Analysis', to: `/investigations/${invId}/analysis`, icon: ScanSearch },
     { name: 'Provenance Graph', to: `/investigations/${invId}/graph`, icon: GitBranch },
+    { name: 'Chronological Timeline', to: `/investigations/${invId}/timeline`, icon: Clock },
     { name: 'Evidence Time Machine', to: `/investigations/${invId}/time-machine`, icon: History },
     { name: 'Version Compare', to: `/investigations/${invId}/compare`, icon: GitCompare },
     { name: 'Reports', to: `/investigations/${invId}/reports`, icon: FileText },
@@ -40,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const handleResetDemo = async () => {
     if (window.confirm('Reset fictional demonstration data (Hospital Reimbursement Review)?')) {
       try {
-        await api.resetDemo();
+        await api.resetDemoCase();
         await refreshInvestigations();
         alert('Demonstration case reset successfully.');
       } catch (err) {

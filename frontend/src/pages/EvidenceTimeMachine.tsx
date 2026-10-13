@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   History,
-  FileText,
   AlertTriangle,
   RotateCcw,
   CheckCircle2,
-  XCircle,
-  ArrowRight,
-  ShieldAlert,
   Info,
-  GitBranch,
-  SplitSquareVertical
+  GitBranch
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { api } from '../services/api';
@@ -26,7 +21,6 @@ export const EvidenceTimeMachine: React.FC = () => {
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
   const [simulationResult, setSimulationResult] = useState<TimeMachineResult | null>(null);
   const [simulating, setSimulating] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const targetId = id || activeInvestigation?.id || 'demo';
 
@@ -42,7 +36,6 @@ export const EvidenceTimeMachine: React.FC = () => {
         const cand = docs.find((d) => d.file_name.includes('Statement') || d.file_name.includes('Receipt')) || docs[0];
         setSelectedDocId(cand.id);
       }
-      setLoading(false);
     }).catch(console.error);
   }, [id, targetId]);
 

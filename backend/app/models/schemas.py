@@ -24,6 +24,11 @@ class DocumentMetadata(BaseModel):
     font_count: int = 0
     embedded_images_count: int = 0
     is_encrypted: bool = False
+    extraction_method: Optional[str] = "native_text"  # native_text, ocr, hybrid, none
+    ocr_status: Optional[str] = "not_needed"  # not_needed, completed, unavailable, failed
+    ocr_pages: List[int] = Field(default_factory=list)
+    ocr_confidence: float = 0.0
+    image_dimensions: Optional[str] = None
 
 class ExtractedFields(BaseModel):
     amounts: List[str] = Field(default_factory=list)
@@ -52,6 +57,7 @@ class DocumentModel(BaseModel):
     processing_status: str = "uploaded"  # uploaded, processing, analyzed, error
     upload_timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     reviewer_notes: Optional[str] = ""
+    ocr_details: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 class DimensionAssessment(BaseModel):
     dimension_name: str  # Consistency, Source Independence, Authenticity Verification, Evidence Completeness
@@ -88,6 +94,9 @@ class FindingModel(BaseModel):
     reviewer_status: str = "Open"  # Open, Under Review, Confirmed Finding, Resolved, Dismissed
     reviewer_notes: Optional[str] = ""
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    is_ai_assisted: bool = False
+    ai_explanation: Optional[str] = None
+    ai_analysis: Optional[Dict[str, Any]] = None
 
 class GraphNode(BaseModel):
     id: str
@@ -100,6 +109,9 @@ class GraphEdge(BaseModel):
     source: str
     target: str
     label: str  # SUPPORTS, CONTRADICTS, REFERENCES, POSSIBLY_DERIVED_FROM, DUPLICATE_OR_SIMILAR_TO, ISSUED_BY, RELATES_TO
+    sourceHandle: Optional[str] = None
+    targetHandle: Optional[str] = None
+    type: Optional[str] = "smoothstep"
     animated: bool = False
     style: Optional[Dict[str, Any]] = None
     data: Optional[Dict[str, Any]] = None
@@ -120,6 +132,7 @@ class EvidenceGapItem(BaseModel):
     recommended_step: str
     related_document_ids: List[str]
     status: str  # Supported by Available Evidence, Partially Supported, Contradicted, Insufficient Evidence, Unable to Verify
+    ai_enhanced_recommendation: Optional[str] = None
 
 class InvestigationCreate(BaseModel):
     name: str
@@ -137,6 +150,8 @@ class InvestigationModel(BaseModel):
     category: str
     primary_claim: str
     creator: str = "Investigator"
+    creator_id: Optional[str] = None
+    creator_email: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     updated_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     current_version: int = 1
@@ -191,3 +206,61 @@ class VersionComparisonResponse(BaseModel):
     claims_requiring_review: List[str]
     changed_relationships: List[Dict[str, Any]]
     summary: str
+
+# --- AUTH SCHEMAS ---
+class UserRegister(BaseModel):
+    email: str
+    username: str
+    password: str
+    full_name: Optional[str] = ""
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    username: str
+    full_name: str
+    role: str = "Lead Digital Forensics Reviewer"
+    created_at: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+
+# --- BACKGROUND JOBS ---
+class JobModel(BaseModel):
+    job_id: str
+    investigation_id: str
+    job_type: str = "analysis"
+    status: str = "queued"  # queued, processing, completed, failed
+    progress_stage: str = "queued"
+    error: Optional[str] = None
+    created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    completed_at: Optional[str] = None
+    result_summary: Optional[Dict[str, Any]] = None
+
+# --- TIMELINE SCHEMAS ---
+class TimelineEventModel(BaseModel):
+    id: str
+    investigation_id: str
+    document_id: Optional[str] = None
+    document_name: str
+    category: str
+    date_str: str
+    date_type: str  # "Extracted Event Date", "Document Date", "PDF Creation Date", "Upload Timestamp"
+    parsed_date: Optional[str] = None
+    description: str
+    is_conflict: bool = False
+    conflict_details: Optional[str] = None
+    related_finding_id: Optional[str] = None
+
+class TimelineResponse(BaseModel):
+    investigation_id: str
+    events: List[TimelineEventModel] = Field(default_factory=list)
+    total_events: int = 0
+    conflicts_count: int = 0
+    date_range: Optional[Dict[str, str]] = None
