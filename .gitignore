@@ -1,0 +1,32 @@
+# Environments and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Node.js
+node_modules/
+dist/
+build/
+.npm
+npm-debug.log*
+
+# User uploads & cache
+backend/uploads/*
+!backend/uploads/demo_files/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
